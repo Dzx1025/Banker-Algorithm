@@ -5,7 +5,7 @@ vector<int> available;
 vector<vector<int>> maxRequest;
 
 int main() {
-	cout << "请输入两个整数，分别为线程数 n 和资源种类数 m :" << endl;
+	cout << "请输入两个整数，分别为线程数(n)和资源种类数(m)：";
 	cin >> n >> m;
 	cout << "请输入一个整数矩阵（" << n << " * " << m << "）。每行代表一个线程对各资源的最大需求:" << endl;
 	for (int i = 1; i <= n; i++) {
@@ -17,7 +17,7 @@ int main() {
 		}
 		maxRequest.push_back(tmp);
 	}
-	cout << "请输入 " << m << " 个整数代表各类资源的可用数量:" << endl;
+	cout << "请输入 " << m << " 个整数代表各类资源的可用数量：";
 	for (int i = 1; i <= m; i++) {
 		int x;
 		cin >> x;
@@ -25,7 +25,7 @@ int main() {
 	}
 	bank *banker = new bank(n, m, move(available), move(maxRequest));
 	if (banker->is_safe())
-		cout << "系统安全！" << endl;
+		cout << "系统目前安全" << endl;
 	else {
 		cout << "系统不安全！";
 		return 0;
