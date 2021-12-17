@@ -1,190 +1,176 @@
-#include <vector>
 #include <iostream>
+#include <vector>
 #include <queue>
+#include <algorithm>
+
 using namespace std;
-namespace vectorcmp
-{
-    template<typename T>
-    bool operator>(const vector<T>& lhs, const vector<T>& rhs)
-    {
-        for (int i = 0; i < lhs.size(); i++)
-            if (lhs[i] > rhs[i])
-                return true;
-        return false;
-    }
-    template<typename T>
-    bool operator<(const vector<T>& lhs, const vector<T>& rhs)
-    {
-        for (int i = 0; i < lhs.size(); i++)
-            if (lhs[i] >= rhs[i])
-                return false;
-        return true;
-    }
-    template<typename T>
-    bool operator<=(const vector<T>& lhs, const vector<T>& rhs)
-    {
-        for (int i = 0; i < lhs.size(); i++)
-            if (lhs[i] > rhs[i])
-                return false;
-        return true;
-    }
-    template<typename T>
-    bool iszero(const vector<T>& arg)
-    {
-        for (auto v : arg)
-            if (v)
-                return false;
-        return true;
-    }
-    template<typename T>
-    vector<T> operator+(const vector<T> &arg0, const vector<T> &arg1)
-    {
-        vector<T> tmp;
-        tmp.resize(arg0.size());
-        for (int i = 0; i < arg0.size(); i++)
-            tmp[i] = arg0[i] + arg1[i];
-        return tmp;
-    }
-    template<typename T>
-    vector<T> operator-(const vector<T> &arg0, const vector<T> &arg1)
-    {
-        vector<T> tmp;
-        tmp.resize(arg0.size());
-        for (int i = 0; i < arg0.size(); i++)
-            tmp[i] = arg0[i] - arg1[i];
-        return tmp;
-    }
-    template<typename T>
-    vector<T>& operator+=(vector<T> &src, const vector<T> &arg)
-    {
-        for (int i = 0; i < src.size(); i++)
-            src[i] += arg[i];
-        return src;
-    }
-    template<typename T>
-    vector<T>& operator-=(vector<T> &src, const vector<T> &arg)
-    {
-        for (int i = 0; i < src.size(); i++)
-            src[i] -= arg[i];
-        return src;
-    }
+namespace vectorCmp {
+	template<typename T>
+	bool operator>(const vector<T> &lhs, const vector<T> &rhs) {
+		for (int i = 0; i < lhs.size(); i++)
+			if (lhs[i] > rhs[i])
+				return true;
+		return false;
+	}
+
+	template<typename T>
+	bool operator<(const vector<T> &lhs, const vector<T> &rhs) {
+		for (int i = 0; i < lhs.size(); i++)
+			if (lhs[i] >= rhs[i])
+				return false;
+		return true;
+	}
+
+	template<typename T>
+	bool operator<=(const vector<T> &lhs, const vector<T> &rhs) {
+		for (int i = 0; i < lhs.size(); i++)
+			if (lhs[i] > rhs[i])
+				return false;
+		return true;
+	}
+
+	template<typename T>
+	bool is_zero(const vector<T> &arg) {
+		return std::all_of(arg.begin(), arg.end(), [&](const auto &t) { return !t; });
+	}
+
+	template<typename T>
+	vector<T> operator+(const vector<T> &arg0, const vector<T> &arg1) {
+		vector<T> tmp(arg0.size());
+		for (int i = 0; i < arg0.size(); i++)
+			tmp[i] = arg0[i] + arg1[i];
+		return tmp;
+	}
+
+	template<typename T>
+	vector<T> operator-(const vector<T> &arg0, const vector<T> &arg1) {
+		vector<T> tmp(arg0.size());
+		for (int i = 0; i < arg0.size(); i++)
+			tmp[i] = arg0[i] - arg1[i];
+		return tmp;
+	}
+
+	template<typename T>
+	vector<T> &operator+=(vector<T> &src, const vector<T> &arg) {
+		for (int i = 0; i < src.size(); i++)
+			src[i] += arg[i];
+		return src;
+	}
+
+	template<typename T>
+	vector<T> &operator-=(vector<T> &src, const vector<T> &arg) {
+		for (int i = 0; i < src.size(); i++)
+			src[i] -= arg[i];
+		return src;
+	}
 }
-using namespace vectorcmp;
-class bank
-{
+using namespace vectorCmp;
+
+class bank {
 public:
-    bank() = delete;
-    bank(int ths, int res, vector<int>&& avlb, vector<vector<int>>&& max) : n(ths), m(res)
-    {
-        this->available = move(avlb);
-        this->max = move(max);
-        for (int i = 0; i < ths; i++)
-        {
-            vector<int> tmp;
-            tmp.resize(res);
-            allocation.push_back(tmp);
-        }
-        n_finished = 0;
-        finish.resize(ths);
-    }
-    bool make_request(int x, const vector<int>& request)//x - ÌáÆğĞèÇóµÄÏß³Ì£¬request - ±¾´Î¶Ô¸÷×ÊÔ´µÄĞèÇó
-    {
-        if (request + allocation[x] > max[x] || request > available || finish[x])//ĞèÇóºÏÀíĞÔ
-            return false;
-        available -= request;//³¢ÊÔ·ÖÅä
-        allocation[x] += request;
-        if (safe())//°²È«ĞÔ¼ì²é
-        {
-            if (iszero(need(x)))//Ïß³ÌÍË³ö
-                mark(x);
-            return true;
-        }
-        else
-        {
-            available += request;
-            allocation[x] -= request;
-        }
-        return false;
-    }
-    void print()const;
-    bool safe()const;
-    void mark(const int &arg)//½«½ø³Ì±ê¼ÇÎªÒÑÍê³É
-    {
-        if (!finish[arg])
-        {
-            finish[arg] = true;
-            available += allocation[arg];
-            allocation[arg] = vector<int>(m, 0);
-            n_finished++;
-        }
-    }
-    bool finished()const{
-        return n_finished == n;
-    }
+	bank() = delete;
+
+	bank(int ths, int res, vector<int> &&available, vector<vector<int>> &&max)
+			: n(ths), m(res), available(move(available)), max(move(max)),
+			  allocation(ths, vector<int>(res)), n_finished(0), finish(ths) {}
+
+	bool make_request(int x, const vector<int> &request)    //x - æèµ·éœ€æ±‚çš„çº¿ç¨‹ï¼Œrequest - æœ¬æ¬¡å¯¹å„èµ„æºçš„éœ€æ±‚
+	{
+		if (request + allocation[x] > max[x] || request > available || finish[x])   //éœ€æ±‚åˆç†æ€§
+			return false;
+		available -= request;   //å°è¯•åˆ†é…
+		allocation[x] += request;
+		if (is_safe())  //å®‰å…¨æ€§æ£€æŸ¥
+		{
+			if (is_zero(need(x)))   //çº¿ç¨‹é€€å‡º
+				mark(x);
+			return true;
+		} else {
+			available += request;
+			allocation[x] -= request;
+		}
+		return false;
+	}
+
+	void print() const;
+
+	[[nodiscard]] bool is_safe() const;
+
+	void mark(const int arg)   //å°†è¿›ç¨‹æ ‡è®°ä¸ºå·²å®Œæˆ
+	{
+		if (!finish[arg]) {
+			finish[arg] = true;
+			available += allocation[arg];
+			allocation[arg] = vector<int>(m, 0);
+			n_finished++;
+		}
+	}
+
+	[[nodiscard]] bool finished() const {
+		return n_finished == n;
+	}
+
 private:
-    int n;//½ø³ÌÊı
-    int m;//×ÊÔ´ÀàĞÍÊı
-    int n_finished;//ÒÑÍê³ÉÊıÁ¿
-    vector<bool> finish;//½ø³ÌÍê³ÉÇé¿ö
-    vector<int> available;//µ±Ç°M¸ö×ÊÔ´µÄ¿ÉÓÃĞÔ
-    vector<vector<int>> max;//N¸ö½ø³Ì¶ÔM¸ö×ÊÔ´µÄ×î´óĞèÇó
-    vector<vector<int>> allocation;//µ±Ç°ÒÑ¾­¸øN¸ö½ø³Ì·ÖÅäµÄM¸ö×ÊÔ´ÊıÁ¿
-    vector<int> need(const int &x)const
-    {
-        return max[x] - allocation[x];
-    }
+	int n;                          //è¿›ç¨‹æ•°
+	int m;                          //èµ„æºç±»å‹æ•°
+	int n_finished;                 //å·²å®Œæˆæ•°é‡
+	vector<bool> finish;            //è¿›ç¨‹å®Œæˆæƒ…å†µ
+	vector<int> available;          //å½“å‰Mä¸ªèµ„æºçš„å¯ç”¨æ€§
+	vector<vector<int>> max;        //Nä¸ªè¿›ç¨‹å¯¹Mä¸ªèµ„æºçš„æœ€å¤§éœ€æ±‚
+	vector<vector<int>> allocation; //å½“å‰å·²ç»ç»™Nä¸ªè¿›ç¨‹åˆ†é…çš„Mä¸ªèµ„æºæ•°é‡
+
+	[[nodiscard]] vector<int> need(const int &x) const {
+		return max[x] - allocation[x];
+	}
 };
-void bank::print()const
-{
-    cout<<"------------------µ±Ç°Çé¿ö----------------"<<endl;
-    cout<<"µ±Ç°¿ÉÓÃ×ÊÔ´ :\t";
-    for (auto v : available)
-        cout<<v<<ends;
-    cout<<endl;
-    cout<<"¸÷Ïß³ÌÒÑ·ÖÅä×ÊÔ´:"<<endl;
-    cout<<"Ïß³Ì±àºÅ:";
-    for (int i = 0; i < m; i++)
-        printf("[%d]\t", i);
-    cout<<endl;
-    for (int i = 0; i < allocation.size(); i++)
-    {
-        if (finish[i])
-            cout<<"\tFINISHED!";
-        else
-            for (int j = 0; j < allocation[i].size(); j++)
-                printf("\t%d", allocation[i][j]);
-        cout<<endl;
-    }
-    cout<<string(40, '-')<<endl;
+
+void bank::print() const {
+	cout << "------------------å½“å‰æƒ…å†µ----------------" << endl;
+	cout << "å½“å‰å¯ç”¨èµ„æº :\t";
+	for (auto v: available)
+		cout << v << ' ';
+	cout << endl;
+	cout << "å„çº¿ç¨‹å·²åˆ†é…èµ„æº:" << endl;
+	cout << "çº¿ç¨‹ç¼–å·:";
+	for (int i = 0; i < m; i++)
+		printf("[%d]\t", i);
+	cout << endl;
+	for (int i = 0; i < allocation.size(); i++) {
+		if (finish[i])
+			cout << "\tFINISHED!";
+		else
+			for (int j: allocation[i])
+				printf("\t%d", j);
+		cout << endl;
+	}
+	cout << string(40, '-') << endl;
 }
-bool bank::safe()const
-{
-    vector<int> keep = available;
-    int now_fin = n_finished;
-    vector<bool> finish = this->finish;
-    queue<int> cpl_list;
-    while (now_fin != n)//ÉĞÓĞ²»°²È«½ø³Ì
-    {
-        bool change = false;
-        for (int i = 0; i < n; i++)
-            if (!finish[i] && need(i) <= keep)
-            {
-                keep += allocation[i];
-                finish[i] = true;
-                cpl_list.push(i);
-                change = true;
-                now_fin++;
-            }
-        if (!change)//Ã»ÓĞ½ø³ÌÄÜ¹»±äÎª°²È«
-            return false;
-    }
-    //Êä³ö°²È«ĞòÁĞ
-    cout<<"°²È«ĞòÁĞÎª: ";
-    while (!cpl_list.empty())
-    {
-        cout<<cpl_list.front()<<'\t';
-        cpl_list.pop();
-    }
-    cout<<endl;
-    return true;//ËùÓĞ½ø³Ì¾ù±äÎª°²È«
+
+bool bank::is_safe() const {
+	vector<int> keep = available;
+	int now_fin = n_finished;
+	vector<bool> is_finish(finish);
+	queue<int> cpl_list;
+	while (now_fin != n)    //å°šæœ‰ä¸å®‰å…¨è¿›ç¨‹
+	{
+		bool change = false;
+		for (int i = 0; i < n; i++)
+			if (!is_finish[i] && need(i) <= keep) {
+				keep += allocation[i];
+				is_finish[i] = true;
+				cpl_list.push(i);
+				change = true;
+				now_fin++;
+			}
+		if (!change)    //æ²¡æœ‰è¿›ç¨‹èƒ½å¤Ÿå˜ä¸ºå®‰å…¨
+			return false;
+	}
+	//è¾“å‡ºå®‰å…¨åºåˆ—
+	cout << "å®‰å…¨åºåˆ—ä¸º: ";
+	while (!cpl_list.empty()) {
+		cout << cpl_list.front() << ' ';
+		cpl_list.pop();
+	}
+	cout << endl;
+	return true;    //æ‰€æœ‰è¿›ç¨‹å‡å˜ä¸ºå®‰å…¨
 }
