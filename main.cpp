@@ -1,63 +1,76 @@
 #include <iostream>
 #include <vector>
 #include "algo.h"
-#define DEBUG
-using namespace std;
+
 int n, m;
-vector<int> avlb;
-vector<vector<int>> maxx;
-int main()
-{
-    cout<<"ÇëÊäÈëÁ½¸öÕûÊý£¬·Ö±ðÎªÏß³ÌÊý n ºÍ×ÊÔ´ÖÖÀàÊý m :"<<endl;
-    cin>>n>>m;
-    cout<<"ÇëÊäÈëÒ»¸öÕûÊý¾ØÕó( "<<n<<" * "<<m<<" ). Ã¿ÐÐ´ú±íÒ»¸öÏß³Ì¶Ô¸÷×ÊÔ´µÄ×î´óÐèÇó:"<<endl;
-    for (int i = 1; i <= n; i++)
-    {
-        vector<int> tmp;
-        tmp.clear();
-        for (int j = 1; j <= m; j++)
-        {
-            int x;
-            cin>>x;
-            tmp.push_back(x);
-        }
-        maxx.push_back(tmp);
-    }
-    cout<<"ÇëÊäÈë "<<m<<" ¸öÕûÊý´ú±í¸÷Àà×ÊÔ´µÄ¿ÉÓÃÊýÁ¿:"<<endl;
-    for (int i = 1; i <= m; i++)
-    {
-        int x;
-        cin>>x;
-        avlb.push_back(x);
-    }
-    bank* banker = new bank(n, m, move(avlb), move(maxx));
-    if (banker->safe())
-        cout<<"ÏµÍ³°²È«!"<<endl;
-    else
-    {
-        cout<<"ÏµÍ³²»°²È«!";
-        return 0;
-    }
-    while (!banker->finished())
-    {
-        cout<<"ÇëÊäÈë·¢Æð´Ë´ÎÐèÇóµÄÏß³Ì±àºÅ(±àºÅÊ¼ÓÚ0) :";
-        int x;
-        cin>>x;
-        cout<<"ÇëÊäÈë "<<m<<" ¸öÕûÊý´ú±í±¾´ÎÇëÇóµÄ¸÷Àà×ÊÔ´ÊýÁ¿:"<<endl;
-        vector<int> req;
-        req.clear();
-        for (int i = 1; i <= m; i++)
-        {
-            int tmp;
-            cin>>tmp;
-            req.push_back(tmp);
-        }
-        if (banker->make_request(x, req))
-            cout<<"\t\t³É¹¦!"<<endl;
-        else
-            cout<<"\t\tÊ§°Ü!"<<endl;
-        banker->print();
-    }
-    cout<<"ËùÓÐÏß³Ì¾ùÒÑÍê³É£¬×ÊÔ´½»»¹ÏµÍ³£¡";
-    return 0;
+vector<int> available;
+vector<vector<int>> maxRequest;
+
+int main() {
+	cout << "è¯·è¾“å…¥ä¸¤ä¸ªæ•´æ•°ï¼Œåˆ†åˆ«ä¸ºçº¿ç¨‹æ•° n å’Œèµ„æºç§ç±»æ•° m :" << endl;
+	cin >> n >> m;
+	cout << "è¯·è¾“å…¥ä¸€ä¸ªæ•´æ•°çŸ©é˜µ( " << n << " * " << m << " ). æ¯è¡Œä»£è¡¨ä¸€ä¸ªçº¿ç¨‹å¯¹å„èµ„æºçš„æœ€å¤§éœ€æ±‚:" << endl;
+	for (int i = 1; i <= n; i++) {
+		vector<int> tmp;
+		for (int j = 1; j <= m; j++) {
+			int x;
+			cin >> x;
+			tmp.push_back(x);
+		}
+		maxRequest.push_back(tmp);
+	}
+	cout << "è¯·è¾“å…¥ " << m << " ä¸ªæ•´æ•°ä»£è¡¨å„ç±»èµ„æºçš„å¯ç”¨æ•°é‡:" << endl;
+	for (int i = 1; i <= m; i++) {
+		int x;
+		cin >> x;
+		available.push_back(x);
+	}
+	bank *banker = new bank(n, m, move(available), move(maxRequest));
+	if (banker->is_safe())
+		cout << "ç³»ç»Ÿå®‰å…¨!" << endl;
+	else {
+		cout << "ç³»ç»Ÿä¸å®‰å…¨!";
+		return 0;
+	}
+	while (!banker->finished()) {
+		cout << "è¯·è¾“å…¥å‘èµ·æ­¤æ¬¡éœ€æ±‚çš„çº¿ç¨‹ç¼–å·(ç¼–å·å§‹äºŽ0) :";
+		int x;
+		cin >> x;
+		cout << "è¯·è¾“å…¥ " << m << " ä¸ªæ•´æ•°ä»£è¡¨æœ¬æ¬¡è¯·æ±‚çš„å„ç±»èµ„æºæ•°é‡: ";
+		vector<int> req;
+		req.clear();
+		for (int i = 1; i <= m; i++) {
+			int tmp;
+			cin >> tmp;
+			req.push_back(tmp);
+		}
+		if (banker->make_request(x, req))
+			cout << "\t\tæˆåŠŸ!" << endl;
+		else
+			cout << "\t\tå¤±è´¥!" << endl;
+		banker->print();
+	}
+	cout << "æ‰€æœ‰çº¿ç¨‹å‡å·²å®Œæˆï¼Œèµ„æºäº¤è¿˜ç³»ç»Ÿï¼";
+	return 0;
 }
+
+/*
+4 3
+
+3 2 2
+6 1 3
+3 1 4
+4 2 2
+
+9 3 6
+
+0 1 0 0
+1 5 1 1
+2 2 1 1
+3 0 0 2
+
+0 2 2 2
+1 1 0 2
+2 1 0 3
+3 4 2 0
+*/
