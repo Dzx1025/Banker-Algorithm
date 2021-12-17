@@ -36,8 +36,7 @@ namespace vectorCmp {
 
 	template<typename T>
 	vector<T> operator+(const vector<T> &arg0, const vector<T> &arg1) {
-		vector<T> tmp;
-		tmp.resize(arg0.size());
+		vector<T> tmp(arg0.size());
 		for (int i = 0; i < arg0.size(); i++)
 			tmp[i] = arg0[i] + arg1[i];
 		return tmp;
@@ -45,8 +44,7 @@ namespace vectorCmp {
 
 	template<typename T>
 	vector<T> operator-(const vector<T> &arg0, const vector<T> &arg1) {
-		vector<T> tmp;
-		tmp.resize(arg0.size());
+		vector<T> tmp(arg0.size());
 		for (int i = 0; i < arg0.size(); i++)
 			tmp[i] = arg0[i] - arg1[i];
 		return tmp;
@@ -98,7 +96,7 @@ public:
 
 	[[nodiscard]] bool is_safe() const;
 
-	void mark(const int &arg)   //将进程标记为已完成
+	void mark(const int arg)   //将进程标记为已完成
 	{
 		if (!finish[arg]) {
 			finish[arg] = true;

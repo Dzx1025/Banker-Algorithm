@@ -1,5 +1,3 @@
-#include <iostream>
-#include <vector>
 #include "algo.h"
 
 int n, m;
@@ -9,7 +7,7 @@ vector<vector<int>> maxRequest;
 int main() {
 	cout << "请输入两个整数，分别为线程数 n 和资源种类数 m :" << endl;
 	cin >> n >> m;
-	cout << "请输入一个整数矩阵( " << n << " * " << m << " ). 每行代表一个线程对各资源的最大需求:" << endl;
+	cout << "请输入一个整数矩阵（" << n << " * " << m << "）。每行代表一个线程对各资源的最大需求:" << endl;
 	for (int i = 1; i <= n; i++) {
 		vector<int> tmp;
 		for (int j = 1; j <= m; j++) {
@@ -27,16 +25,16 @@ int main() {
 	}
 	bank *banker = new bank(n, m, move(available), move(maxRequest));
 	if (banker->is_safe())
-		cout << "系统安全!" << endl;
+		cout << "系统安全！" << endl;
 	else {
-		cout << "系统不安全!";
+		cout << "系统不安全！";
 		return 0;
 	}
 	while (!banker->finished()) {
-		cout << "请输入发起此次需求的线程编号(编号始于0) :";
+		cout << "请输入发起此次需求的线程编号（编号始于0）：";
 		int x;
 		cin >> x;
-		cout << "请输入 " << m << " 个整数代表本次请求的各类资源数量: ";
+		cout << "请输入" << m << "个整数代表本次请求的各类资源数量：";
 		vector<int> req;
 		req.clear();
 		for (int i = 1; i <= m; i++) {
@@ -45,9 +43,11 @@ int main() {
 			req.push_back(tmp);
 		}
 		if (banker->make_request(x, req))
-			cout << "\t\t成功!" << endl;
-		else
-			cout << "\t\t失败!" << endl;
+			cout << "\t\t成功！" << endl;
+		else {
+			cout << "\t\t失败！" << endl;
+			return 0;
+		}
 		banker->print();
 	}
 	cout << "所有线程均已完成，资源交还系统！";
