@@ -4,6 +4,7 @@
 #include <algorithm>
 
 using namespace std;
+
 namespace vectorCmp {
 	template<typename T>
 	bool operator>(const vector<T> &lhs, const vector<T> &rhs) {
@@ -66,11 +67,11 @@ namespace vectorCmp {
 }
 using namespace vectorCmp;
 
-class bank {
+class Bank {
 public:
-	bank() = delete;
+	Bank() = delete;
 
-	bank(int ths, int res, vector<int> &&available, vector<vector<int>> &&max)
+	Bank(int ths, int res, vector<int> &&available, vector<vector<int>> &&max)
 			: n(ths), m(res), available(move(available)), max(move(max)),
 			  allocation(ths, vector<int>(res)), n_finished(0), finish(ths) {}
 
@@ -124,7 +125,7 @@ private:
 	}
 };
 
-void bank::print() const {
+void Bank::print() const {
 	cout << "------------------当前情况----------------" << endl;
 	cout << "当前可用资源 :\t";
 	for (auto v: available)
@@ -146,7 +147,7 @@ void bank::print() const {
 	cout << string(40, '-') << endl;
 }
 
-bool bank::is_safe() const {
+bool Bank::is_safe() const {
 	vector<int> keep = available;
 	int now_fin = n_finished;
 	vector<bool> is_finish(finish);

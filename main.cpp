@@ -17,13 +17,13 @@ int main() {
 		}
 		maxRequest.push_back(tmp);
 	}
-	cout << "请输入 " << m << " 个整数代表各类资源的可用数量：";
+	cout << "请输入" << m << "个整数代表各类资源的可用数量：";
 	for (int i = 1; i <= m; i++) {
 		int x;
 		cin >> x;
 		available.push_back(x);
 	}
-	bank *banker = new bank(n, m, move(available), move(maxRequest));
+	Bank *banker = new Bank(n, m, move(available), move(maxRequest));
 	if (banker->is_safe())
 		cout << "系统目前安全" << endl;
 	else {
