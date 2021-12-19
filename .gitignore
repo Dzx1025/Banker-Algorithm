@@ -1,5 +1,12 @@
-#Jetbrains
-.idea
+# Github
+.github/
+
+# VSCode
+.vscode/
+build/
+
+# Jetbrains
+.idea/
 cmake-build-debug/
 
 # Prerequisites
