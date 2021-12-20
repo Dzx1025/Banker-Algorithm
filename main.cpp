@@ -25,9 +25,9 @@ int main() {
 	}
 	Bank *banker = new Bank(n, m, move(available), move(maxRequest));
 	if (banker->is_safe())
-		cout << "[系统目前安全]" << endl;
+		cout << "\t\t[系统目前安全]" << endl;
 	else {
-		cout << "[系统不安全!]";
+		cout << "\t\t[系统不安全!]";
 		return 0;
 	}
 	while (!banker->finished()) {
@@ -36,7 +36,6 @@ int main() {
 		cin >> x;
 		cout << "请输入" << m << "个整数代表本次请求的各类资源数量: ";
 		vector<int> req;
-		req.clear();
 		for (int i = 1; i <= m; i++) {
 			int tmp;
 			cin >> tmp;
@@ -50,7 +49,7 @@ int main() {
 		}
 		banker->print();
 	}
-	cout << "[所有线程均已完成，资源交还系统!]";
+	cout << "\t\t[所有线程均已完成，资源交还系统!]";
 	return 0;
 }
 
