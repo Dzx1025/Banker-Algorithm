@@ -72,8 +72,8 @@ public:
 	Bank() = delete;
 
 	Bank(int ths, int res, vector<int> &&available, vector<vector<int>> &&max)
-			: n(ths), m(res), available(move(available)), max(move(max)),
-			  allocation(ths, vector<int>(res)), n_finished(0), finish(ths) {}
+			: n(ths), m(res), available(available), max(max), allocation(ths, vector<int>(res)), n_finished(0),
+			  finish(ths) {}
 
 	bool make_request(int x, const vector<int> &request)    //x - 提起需求的线程，request - 本次对各资源的需求
 	{
@@ -148,7 +148,7 @@ void Bank::print() const {
 }
 
 bool Bank::is_safe() const {
-	vector<int> keep = available;
+	vector<int> keep(available);
 	int now_fin = n_finished;
 	vector<bool> is_finish(finish);
 	queue<int> cpl_list;

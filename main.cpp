@@ -1,3 +1,4 @@
+#include <memory>
 #include "algo.h"
 
 int n, m;
@@ -23,7 +24,7 @@ int main() {
 		cin >> x;
 		available.push_back(x);
 	}
-	Bank *banker = new Bank(n, m, move(available), move(maxRequest));
+	unique_ptr<Bank> banker(new Bank(n, m, move(available), move(maxRequest)));
 	if (banker->is_safe())
 		cout << "\t\t[系统目前安全]" << endl;
 	else {
